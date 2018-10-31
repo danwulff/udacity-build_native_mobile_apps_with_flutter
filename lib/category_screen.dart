@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 
-import './category.dart';
-import './unit.dart';
+import 'package:hello_rectangle/category.dart';
+import 'package:hello_rectangle/unit.dart';
 
 final _backgroundColor = Colors.green[100];
 
