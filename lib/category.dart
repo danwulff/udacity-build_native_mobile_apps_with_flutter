@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 // @required is defined in the meta.dart package
 import 'package:meta/meta.dart';
 
-import 'package:hello_rectangle/converter_screen.dart';
-import 'package:hello_rectangle/unit.dart';
+import 'converter_screen.dart';
+import 'unit.dart';
 
 // We use an underscore to indicate that these variables are private.
 // See https://www.dartlang.org/guides/language/effective-dart/design#libraries
@@ -45,7 +45,7 @@ class Category extends StatelessWidget {
         assert(units != null),
         super(key: key);
 
-  /// Navigates to the [ConverterRoute].
+  /// Navigates to the [ConverterScreen].
   void _navigateToConverter(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute<Null>(
       builder: (BuildContext context) {
@@ -64,6 +64,9 @@ class Category extends StatelessWidget {
             name: name,
             units: units,
           ),
+          // This prevents the attempt to resize the screen when the keyboard
+          // is opened
+          resizeToAvoidBottomPadding: false,
         );
       },
     ));
@@ -84,14 +87,21 @@ class Category extends StatelessWidget {
         height: _rowHeight,
         child: InkWell(
           borderRadius: _borderRadius,
+          // TODO: Use the highlight and splash colors from the ColorSwatch
           highlightColor: color,
           splashColor: color,
+          // We can use either the () => function() or the () { function(); }
+          // syntax.
           onTap: () => _navigateToConverter(context),
           child: Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+              // There are two ways to denote a list: `[]` and `List()`.
+              // Prefer to use the literal syntax, i.e. `[]`, instead of `List()`.
+              // You can add the type argument if you'd like, i.e. <Widget>[].
+              // See https://www.dartlang.org/guides/language/effective-dart/usage#do-use-collection-literals-when-possible
+              children: [
                 Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Icon(
