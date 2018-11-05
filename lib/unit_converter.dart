@@ -5,39 +5,27 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import 'category.dart';
 import 'unit.dart';
 
 const _padding = EdgeInsets.all(16.0);
 
-/// [ConverterScreen] where users can input amounts to convert in one [Unit]
+/// [UnitConverter] where users can input amounts to convert in one [Unit]
 /// and retrieve the conversion in another [Unit] for a specific [Category].
-///
-/// While it is named ConverterScreen, a more apt name would be ConverterScreen,
-/// because it is responsible for the UI at the route's destination.
-class ConverterScreen extends StatefulWidget {
-  /// This [Category]'s name.
-  final String name;
+class UnitConverter extends StatefulWidget {
+  /// The current [Category] for unit conversion.
+  final Category category;
 
-  /// Color for this [Category].
-  final Color color;
-
-  /// Units for this [Category].
-  final List<Unit> units;
-
-  /// This [ConverterScreen] requires the name, color, and units to not be null.
-  const ConverterScreen({
-    @required this.name,
-    @required this.color,
-    @required this.units,
-  })  : assert(name != null),
-        assert(color != null),
-        assert(units != null);
+  /// This [UnitConverter] takes in a [Category] with [Units]. It can't be null.
+  const UnitConverter({
+    @required this.category,
+  }) : assert(category != null);
 
   @override
-  _ConverterScreenState createState() => _ConverterScreenState();
+  _UnitConverterState createState() => _UnitConverterState();
 }
 
-class _ConverterScreenState extends State<ConverterScreen> {
+class _UnitConverterState extends State<UnitConverter> {
   Unit _fromValue;
   Unit _toValue;
   double _inputValue;
@@ -52,10 +40,13 @@ class _ConverterScreenState extends State<ConverterScreen> {
     _setDefaults();
   }
 
+  // TODO: _createDropdownMenuItems() and _setDefaults() should also be called
+  // each time the user switches [Categories].
+
   /// Creates fresh list of [DropdownMenuItem] widgets, given a list of [Unit]s.
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
-    for (var unit in widget.units) {
+    for (var unit in widget.category.units) {
       newItems.add(DropdownMenuItem(
         value: unit.name,
         child: Container(
@@ -71,11 +62,12 @@ class _ConverterScreenState extends State<ConverterScreen> {
     });
   }
 
-  /// Sets the default values for the 'from' and 'to' [Dropdown]s.
+  /// Sets the default values for the 'from' and 'to' [Dropdown]s, and the
+  /// updated output value if a user had previously entered an input.
   void _setDefaults() {
     setState(() {
-      _fromValue = widget.units[0];
-      _toValue = widget.units[1];
+      _fromValue = widget.category.units[0];
+      _toValue = widget.category.units[1];
     });
   }
 
@@ -123,7 +115,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
   }
 
   Unit _getUnit(String unitName) {
-    return widget.units.firstWhere(
+    return widget.category.units.firstWhere(
       (Unit unit) {
         return unit.name == unitName;
       },
@@ -206,7 +198,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
             keyboardType: TextInputType.number,
             onChanged: _updateInputValue,
           ),
-          _createDropdown(_toValue.name, _updateToConversion),
+          _createDropdown(_fromValue.name, _updateFromConversion),
         ],
       ),
     );
@@ -219,8 +211,6 @@ class _ConverterScreenState extends State<ConverterScreen> {
       ),
     );
 
-    // TODO: Create the 'output' group of widgets. This is a Column that
-    // includes the output value, and 'to' unit [Dropdown].
     final output = Padding(
       padding: _padding,
       child: Column(
@@ -239,7 +229,7 @@ class _ConverterScreenState extends State<ConverterScreen> {
               ),
             ),
           ),
-          _createDropdown(_fromValue.name, _updateFromConversion),
+          _createDropdown(_toValue.name, _updateToConversion),
         ],
       ),
     );
