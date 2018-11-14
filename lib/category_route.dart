@@ -71,6 +71,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
       'error': Color(0xFF912D2D),
     }),
   ];
+  // TODO: Add image asset paths here
 
   @override
   Future<void> didChangeDependencies() async {
@@ -101,6 +102,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
         name: key,
         units: units,
         color: _baseColors[categoryIndex],
+        // TODO: Replace the placeholder icon with an icon image path
         iconLocation: Icons.cake,
       );
       setState(() {
